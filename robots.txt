@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-
-Disallow: 
-
-Sitemap: https://fanmav.github.io/sitemap.xml
