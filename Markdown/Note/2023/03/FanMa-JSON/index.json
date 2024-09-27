@@ -1,0 +1,42 @@
+{
+    "posts": [{{ range first 1 ( where .Site.Pages "Section" "Article" ) }}
+      {
+        "title": "{{.Title}}",
+        "desc": "{{.Description}}",
+        "link": "{{ print ( path.Dir ( .File.Dir ) ) "/" .File.ContentBaseName "/" }}",
+        "date": "{{ i18n "format_date" .PublishDate }}",
+        "count": {{ .WordCount }},
+        "time": "{{ if .Site.Params.enableReadingTime }}
+        {{ $readTime := mul (div (countwords .Content) 220.0) 60 }}
+        {{ $minutes := math.Floor (div $readTime 60) }}
+        {{ $seconds := mod $readTime 60 }}
+        {{ if gt $minutes 0}}
+        {{ $minutes }} {{ cond (eq $minutes 1) "minute" "min" }}
+        {{ end }}
+        {{ $seconds }} {{ cond (eq $seconds 1) "second" "s" }}
+        {{ end }}"
+      }
+    {{ end }}{{ range first 9 ( after 1 ( where .Site.Pages "Section" "Article" ) ) }}
+    ,{
+        "title": "{{.Title}}",
+        "desc": "{{.Description}}",
+        "link": "{{ print ( path.Dir ( .File.Dir ) ) "/" .File.ContentBaseName "/" }}",
+        "date": "{{ i18n "format_date" .PublishDate }}",
+        "count": {{ .WordCount }},
+        "time": "{{ if .Site.Params.enableReadingTime }}
+        {{ $readTime := mul (div (countwords .Content) 220.0) 60 }}
+        {{ $minutes := math.Floor (div $readTime 60) }}
+        {{ $seconds := mod $readTime 60 }}
+        {{ if gt $minutes 0}}
+        {{ $minutes }} {{ cond (eq $minutes 1) "minute" "min" }}
+        {{ end }}
+        {{ $seconds }} {{ cond (eq $seconds 1) "second" "s" }}
+        {{ end }}"
+    }
+  {{ end }}],
+    "author": "黄胜丰",
+    "sitepage": {{ len ( .Site.RegularPages ) | dict "Nums" | T "RegularPages" }},
+    "sitecount": {{$scratch := newScratch}}{{ range (where .Site.Pages "Kind" "page" )}}{{$scratch.Add "total" .WordCount}}{{ end }}{{$scratch.Get "total" }},
+    "sitedate": "{{ .Site.Params.CreateDate }}",
+    "sitelast": "{{ i18n "LastChange" .Site.LastChange }}"
+}
